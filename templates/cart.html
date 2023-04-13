@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Shopping Cart</title>
+    <style>
+      .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 10px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 50%;
+      }
+      .cart-item img {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        height: auto;
+        padding: 10px;
+        width: 100px;
+        height: 100px;
+      }
+      .cart-item h2 {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+      }
+      .cart-item p {
+        margin-bottom: 10px;
+      }
+      .cart-item .price {
+        font-weight: bold;
+      }
+      .cart-item .delete {
+        color: red;
+        cursor: pointer;
+      }
+
+      .item-details {
+        display: flex;
+        align-items: center;
+      }
+
+      .item-image {
+        width: 100px;
+        height: auto;
+        margin-right: 10px;
+      }
+
+      .item-description {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .item-name {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+      }
+
+      .item-text-description {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 300px; /* set the maximum width for the paragraph */
+      }
+
+      .item-price {
+        font-weight: bold;
+      }
+
+      .item-quantity {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .item-text {
+        margin: 0;
+      }
+
+      .delete-btn {
+        background-color: #FF5733;
+        border: none;
+        color: white;
+        padding: 5px;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        font-size: 0.8rem;
+        margin-top: 5px;
+        cursor: pointer;
+      }
+
+      .total {
+        text-align: right;
+        font-weight: bold;
+        position: absolute;
+        top: 17%;
+        right: 10%;
+        margin-right: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 10px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        height: 5%;
+        width: 25%;
+        /*transform: translate(0, -50%);*/
+      }
+
+      body {
+        background: linear-gradient(to bottom, #fff, #e6f4ff);
+        background-size: 100vw 100vh;
+      }
+      .backbtn {
+        background-color: #333;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+      }
+      .backbtn:hover {
+        background-color: #666;
+      }
+      .backbtn.disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      .backbtn.disabled:hover {
+        background-color: #ccc;
+      }
+      .quantityfield{
+          width: 50px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <h1>Shopping Cart</h1>
+    <button onclick="window.location.href='/'" class="backbtn">Back to Home</button>
+    <div>
+      {% for product in cart_products %}
+      <div class="cart-item">
+          <div class="item-details">
+              <img src="{{ product.image_url }}" alt="{{ product.name }}">
+              
+              <div class="item-description">
+                  <h2 class="item-name">{{ product.name }}</h2>
+                  
+                  <p class="item-text-description">{{ product.description }}</p>
+
+                  <p class="item-price">$ {{ product.price }} per unit</p>
+              </div>
+
+          <div class="item-quantity">              
+              
+              <div class="product-quantity">
+
+                <label for="quantity">Quantity:</label>
+
+                <input type="number" class="quantityfield" name="quantity" value="{{ product.quantity }}" min="1" max="100000" id="quantity-{{ product.id }}" onchange="updateTotalPrice({{ product.id }}, {{ product.price }})">
+                
+                <br></br>
+                <br></br>
+
+                <form method="POST" action="/delete-cart-item/{{ product.id }}">
+                  <input type="hidden" name="product_id" value="{{ product.id }}">
+                  <button type="submit" class="delete-btn">Delete</button>
+                </form>
+
+              </div>
+
+
+          </div>
+
+
+          </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="total">
+      Total: $ <span id="total-price">{{ total_price }}</span>
+      <button onclick="window.location.href='/checkout'" class="backbtn" {{ 'disabled' if total_price == 0 }}>Checkout</button>
+    </div>
+    
+    <script>
+      function updateTotalPrice(productId, price) {
+        var quantity = document.getElementById(`quantity-${productId}`).value;
+        // Make AJAX request to update cart item quantity
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", `/update-cart-item/${productId}`);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            console.log(xhr.responseText);
+            document.getElementById("total-price").innerText = xhr.responseText;
+
+          } else {
+            console.error(xhr.statusText);
+          }
+        };
+        xhr.send(JSON.stringify({quantity: quantity}));
+      
+
+      }
+    </script>
+
+  </body>
+</html>
