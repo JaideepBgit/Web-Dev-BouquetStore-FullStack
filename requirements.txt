@@ -1,0 +1,6 @@
+pymysql
+flask
+awscli
+boto3
+botocore
+gunicorn
