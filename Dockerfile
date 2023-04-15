@@ -21,7 +21,7 @@ WORKDIR /app
 COPY requirements.txt /
 RUN pip install -r /requirements.txt
 
-# Install Gunicorn
+# Install Gunicorn 
 RUN pip install gunicorn
 
 COPY . .
