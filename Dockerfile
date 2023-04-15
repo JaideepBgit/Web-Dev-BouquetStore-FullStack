@@ -14,7 +14,7 @@ RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2
 
 # Download images from S3 bucket
 RUN mkdir -p /app/static/images && \
-    aws s3 sync s3://${BUCKET_NAME}/static/images /app/static/images
+    aws s3 sync s3://webappicationproject /app/static/images
 
 WORKDIR /app
 
