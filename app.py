@@ -9,7 +9,7 @@ from botocore.exceptions import ClientError
 import uuid
 import logging
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'vYW1mik5y$ZKZX3?Iv08roh7gEc9F1yG'
+app.config['SECRET_KEY'] = 'v'
 
 aws_access_key_id = os.environ.get('AWS_ACCESS_KEY_ID')
 aws_secret_access_key = os.environ.get('AWS_SECRET_ACCESS_KEY')
