@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, request, redirect, session, make_response, jsonify
 import pymysql
-import boto3 
+import boto3
 from decimal import Decimal
 from boto3.dynamodb.conditions import Key, Attr
 import secrets

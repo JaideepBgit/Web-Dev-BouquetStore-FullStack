@@ -1,6 +1,6 @@
 # Base image 
 FROM public.ecr.aws/bitnami/python:3.8.12-prod
-
+ 
 # Install system dependencies
 RUN apt-get update && \
     apt-get install -y --no-install-recommends nginx unzip && \
